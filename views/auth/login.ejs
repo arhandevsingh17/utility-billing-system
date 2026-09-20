@@ -1,0 +1,27 @@
+<% layout('layouts/boilerplate') %>
+<div class="container py-4" style="max-width:440px">
+  <div class="card shadow-sm border-0">
+    <div class="card-body p-4">
+      <h4 class="mb-1">Login</h4>
+      <p class="text-muted small mb-4">Access your dashboard</p>
+      <form action="/login" method="POST" novalidate>
+        <div class="mb-3">
+          <label class="form-label">Email</label>
+          <input type="email" name="email" class="form-control" required autofocus>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Password</label>
+          <input type="password" name="password" class="form-control" required>
+        </div>
+        <button class="btn btn-primary w-100">Login</button>
+      </form>
+      <p class="text-center small mt-3 mb-0">No account? <a href="/register">Register as a consumer</a></p>
+    </div>
+  </div>
+  <div class="card border-0 shadow-sm mt-3"><div class="card-body small">
+    <div class="fw-semibold mb-2">Demo credentials (seeded)</div>
+    <div class="d-flex justify-content-between"><span>Admin</span><code>admin@ubs.test / Admin@123</code></div>
+    <div class="d-flex justify-content-between"><span>Meter Reader</span><code>reader@ubs.test / Reader@123</code></div>
+    <div class="d-flex justify-content-between"><span>Consumer</span><code>asha@ubs.test / Consumer@123</code></div>
+  </div></div>
+</div>

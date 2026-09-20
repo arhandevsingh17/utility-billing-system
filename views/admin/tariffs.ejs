@@ -1,0 +1,36 @@
+<% layout('layouts/dashboard') %>
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <div><h4 class="mb-0">Tariffs</h4>
+    <p class="text-muted small mb-0">Demo values &mdash; configurable academic rates, not official utility rates.</p></div>
+  <a href="/admin/tariffs/new" class="btn btn-sm btn-primary">+ Add tariff</a>
+</div>
+<% if (tariffs.length) { %>
+<div class="row g-3">
+<% tariffs.forEach(function(t){ %>
+  <div class="col-md-6"><div class="card border-0 shadow-sm h-100"><div class="card-body">
+    <div class="d-flex justify-content-between align-items-start">
+      <div><h6 class="mb-1"><%= t.name %></h6>
+        <span class="badge bg-light text-dark"><%= t.connectionType %></span>
+        <span class="badge bg-<%= t.isActive ? 'success' : 'secondary' %>"><%= t.isActive ? 'Active' : 'Inactive' %></span></div>
+      <% if (!t.isActive) { %>
+        <form method="POST" action="/admin/tariffs/<%= t._id %>/activate?_method=PUT">
+          <button class="btn btn-sm btn-outline-primary">Make active</button></form>
+      <% } %>
+    </div>
+    <table class="table table-sm mt-3 mb-2">
+      <thead><tr><th>Slab</th><th class="text-end">Rate / kWh</th></tr></thead>
+      <tbody>
+        <% t.slabs.forEach(function(s){ %>
+          <tr><td><%= h.formatSlabRange(s.from, s.to) %></td><td class="text-end"><%= h.formatCurrency(s.rate) %></td></tr>
+        <% }) %>
+      </tbody>
+    </table>
+    <div class="small text-muted">Fixed charge: <strong><%= h.formatCurrency(t.fixedCharge) %></strong> per bill</div>
+  </div></div></div>
+<% }) %>
+</div>
+<% } else { %>
+<div class="card border-0 shadow-sm"><div class="card-body">
+<%- include('../partials/empty', { emptyTitle: 'No tariffs configured', emptyText: 'Billing cannot run without an active tariff per connection type.' }) %>
+</div></div>
+<% } %>

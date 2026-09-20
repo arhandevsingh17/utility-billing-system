@@ -1,0 +1,25 @@
+<% layout('layouts/dashboard') %>
+<h4 class="mb-3">Add meter</h4>
+<div class="card border-0 shadow-sm" style="max-width:640px"><div class="card-body p-4">
+<% if (!consumers.length) { %>
+  <div class="alert alert-warning mb-0">Create a consumer first &mdash; a meter must belong to one.
+    <a href="/admin/consumers/new" class="alert-link">Add consumer</a></div>
+<% } else { %>
+<form method="POST" action="/admin/meters">
+  <div class="mb-3"><label class="form-label">Meter number</label>
+    <input name="meterNumber" class="form-control" placeholder="MTR-1001" required></div>
+  <div class="mb-3"><label class="form-label">Consumer</label>
+    <select name="consumer" class="form-select" required>
+      <option value="">-- select --</option>
+      <% consumers.forEach(function(c){ %>
+        <option value="<%= c._id %>"><%= c.consumerId %> &middot; <%= c.name %> (<%= c.connectionType %>)</option>
+      <% }) %>
+    </select>
+    <div class="form-text">The connection type is copied from the consumer.</div></div>
+  <div class="mb-3"><label class="form-label">Installation date</label>
+    <input type="date" name="installationDate" class="form-control"></div>
+  <button class="btn btn-primary">Create meter</button>
+  <a href="/admin/meters" class="btn btn-outline-secondary">Cancel</a>
+</form>
+<% } %>
+</div></div>

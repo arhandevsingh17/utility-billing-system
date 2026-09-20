@@ -1,0 +1,102 @@
+<% layout('layouts/dashboard') %>
+<% if (!bill) { %>
+  <div class="card border-0 shadow-sm"><div class="card-body">
+    <%- include('../partials/empty', { emptyTitle: 'No bill available', emptyText: 'A bill is generated after a meter reader records your reading.' }) %>
+  </div></div>
+<% } else { %>
+<div class="d-flex justify-content-between align-items-center mb-3 no-print">
+  <h4 class="mb-0">Bill <%= bill.billNumber %></h4>
+  <div class="d-flex gap-2">
+    <button onclick="window.print()" class="btn btn-sm btn-outline-secondary">Print / Save PDF</button>
+    <a href="/consumer/bills" class="btn btn-sm btn-outline-secondary">Back to history</a>
+  </div>
+</div>
+
+<div class="card border-0 shadow-sm bill-sheet"><div class="card-body p-4">
+
+  <div class="d-flex justify-content-between border-bottom pb-3 mb-3 flex-wrap gap-2">
+    <div><h5 class="mb-0">&#9889; <%= appName %></h5>
+      <div class="text-muted small">Electricity bill &middot; <%= h.formatMonth(bill.billingMonth) %></div></div>
+    <div class="text-end"><div class="small text-muted">Bill number</div>
+      <div class="fw-semibold"><%= bill.billNumber %></div>
+      <%- include('../partials/statusBadge', { status: bill.status }) %></div>
+  </div>
+
+  <div class="row g-4 mb-4">
+    <div class="col-md-6">
+      <h6 class="text-uppercase text-muted small">Consumer</h6>
+      <div class="fw-semibold"><%= bill.consumer.name %></div>
+      <div class="small text-muted"><%= bill.consumer.address || '' %></div>
+      <div class="small mt-2">Consumer ID: <code><%= bill.consumer.consumerId || '-' %></code></div>
+      <div class="small">Connection type: <%= bill.consumer.connectionType || '-' %></div>
+    </div>
+    <div class="col-md-6">
+      <h6 class="text-uppercase text-muted small">Meter &amp; period</h6>
+      <div class="small">Meter number: <code><%= bill.meter ? bill.meter.meterNumber : '-' %></code></div>
+      <div class="small">Billing month: <%= h.formatMonth(bill.billingMonth) %></div>
+      <div class="small">Due date: <%= h.formatDate(bill.dueDate) %></div>
+      <div class="small">Tariff applied: <%= bill.tariffName || '-' %></div>
+    </div>
+  </div>
+
+  <table class="table table-sm mb-4">
+    <thead><tr><th>Reading</th><th class="text-end">Value (kWh)</th></tr></thead>
+    <tbody>
+      <tr><td>Previous reading</td><td class="text-end"><%= bill.previousReading %></td></tr>
+      <tr><td>Current reading</td><td class="text-end"><%= bill.currentReading %></td></tr>
+      <tr class="table-light fw-semibold"><td>Units consumed</td><td class="text-end"><%= bill.unitsConsumed %></td></tr>
+    </tbody>
+  </table>
+
+  <h6 class="text-uppercase text-muted small">Slab-wise calculation</h6>
+  <table class="table table-sm mb-4">
+    <thead><tr><th>Slab</th><th class="text-end">Units</th><th class="text-end">Rate</th><th class="text-end">Amount</th></tr></thead>
+    <tbody>
+      <% if (bill.slabBreakdown && bill.slabBreakdown.length) { %>
+        <% bill.slabBreakdown.forEach(function(s){ %>
+          <tr><td><%= h.formatSlabRange(s.from, s.to) %></td>
+              <td class="text-end"><%= s.units %></td>
+              <td class="text-end"><%= h.formatCurrency(s.rate) %></td>
+              <td class="text-end"><%= h.formatCurrency(s.amount) %></td></tr>
+        <% }) %>
+      <% } else { %>
+        <tr><td colspan="4" class="text-muted small">Zero units consumed &mdash; fixed charge only.</td></tr>
+      <% } %>
+    </tbody>
+  </table>
+
+  <div class="row justify-content-end">
+    <div class="col-md-6">
+      <table class="table table-sm mb-0">
+        <tbody>
+          <tr><td>Energy charge</td><td class="text-end"><%= h.formatCurrency(bill.energyCharge) %></td></tr>
+          <tr><td>Fixed charge</td><td class="text-end"><%= h.formatCurrency(bill.fixedCharge) %></td></tr>
+          <% if (bill.surcharge) { %>
+            <tr class="text-danger"><td>Late-payment surcharge</td><td class="text-end"><%= h.formatCurrency(bill.surcharge) %></td></tr>
+          <% } %>
+          <tr class="table-dark fw-semibold"><td>Total amount</td><td class="text-end"><%= h.formatCurrency(bill.totalAmount) %></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="d-flex justify-content-between align-items-center border-top mt-4 pt-3 flex-wrap gap-2">
+    <div class="small">
+      Payment status: <%- include('../partials/statusBadge', { status: bill.status }) %>
+      <% if (bill.paidAt) { %>
+        <span class="text-muted ms-2">Paid on <%= new Date(bill.paidAt).toLocaleString('en-IN') %></span>
+      <% } %>
+    </div>
+    <% if (bill.status !== 'Paid') { %>
+      <form method="POST" action="/consumer/bills/<%= bill._id %>/pay" class="no-print">
+        <button class="btn btn-success">Mark as paid (<%= h.formatCurrency(bill.totalAmount) %>)</button>
+      </form>
+    <% } %>
+  </div>
+
+  <p class="text-muted small mt-3 mb-0">
+    Simulated academic payment &mdash; no real payment gateway is involved.
+    Tariff values are configurable academic/demo values, not official utility rates.
+  </p>
+</div></div>
+<% } %>

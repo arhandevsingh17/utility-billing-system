@@ -1,0 +1,17 @@
+<% layout('layouts/dashboard') %>
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <div><h4 class="mb-0">Meter readers</h4><p class="text-muted small mb-0"><%= readers.length %> account(s)</p></div>
+  <a href="/admin/readers/new" class="btn btn-sm btn-primary">+ Add reader</a>
+</div>
+<div class="card border-0 shadow-sm"><div class="card-body p-0">
+<% if (readers.length) { %>
+  <table class="table align-middle mb-0">
+    <thead><tr><th>Name</th><th>Email</th><th>Readings entered</th><th>Joined</th></tr></thead>
+    <tbody>
+    <% readers.forEach(function(r){ %>
+      <tr><td class="fw-semibold"><%= r.name %></td><td class="small"><%= r.email %></td>
+          <td><%= readingMap[String(r._id)] || 0 %></td><td class="small"><%= h.formatDate(r.createdAt) %></td></tr>
+    <% }) %>
+    </tbody></table>
+<% } else { %><%- include('../partials/empty', { emptyTitle: 'No meter readers yet', emptyText: 'Readers record the monthly meter values.' }) %><% } %>
+</div></div>

@@ -1,0 +1,35 @@
+<% layout('layouts/dashboard') %>
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <div><h4 class="mb-0">Bill history</h4><p class="text-muted small mb-0"><%= bills.length %> bill(s)</p></div>
+  <form method="GET" action="/consumer/bills" class="d-flex gap-2">
+    <select name="status" class="form-select form-select-sm">
+      <option value="">All</option>
+      <% ['Unpaid','Paid','Overdue'].forEach(function(s){ %>
+        <option value="<%= s %>" <%= filters.status === s ? 'selected' : '' %>><%= s %></option>
+      <% }) %>
+    </select>
+    <button class="btn btn-sm btn-outline-secondary">Filter</button>
+  </form>
+</div>
+
+<div class="card border-0 shadow-sm"><div class="card-body p-0">
+<% if (bills.length) { %>
+  <div class="table-responsive"><table class="table align-middle mb-0">
+    <thead><tr><th>Bill no.</th><th>Month</th><th>Meter</th><th class="text-end">Units</th>
+      <th class="text-end">Amount</th><th>Due date</th><th>Status</th><th></th></tr></thead>
+    <tbody>
+    <% bills.forEach(function(b){ %>
+      <tr>
+        <td><code class="small"><%= b.billNumber %></code></td>
+        <td class="small"><%= h.formatMonth(b.billingMonth) %></td>
+        <td class="small"><%= b.meter ? b.meter.meterNumber : '-' %></td>
+        <td class="text-end"><%= b.unitsConsumed %></td>
+        <td class="text-end fw-semibold"><%= h.formatCurrency(b.totalAmount) %></td>
+        <td class="small"><%= h.formatDate(b.dueDate) %></td>
+        <td><%- include('../partials/statusBadge', { status: b.status }) %></td>
+        <td class="text-end"><a class="btn btn-sm btn-outline-secondary" href="/consumer/bills/<%= b._id %>">View</a></td>
+      </tr>
+    <% }) %>
+    </tbody></table></div>
+<% } else { %><%- include('../partials/empty', { emptyTitle: 'No bills found', emptyText: 'Bills appear once your meter has been read.' }) %><% } %>
+</div></div>

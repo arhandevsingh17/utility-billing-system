@@ -1,0 +1,33 @@
+<% layout('layouts/dashboard') %>
+<h4 class="mb-3"><%= consumer ? 'Edit consumer' : 'Add consumer' %></h4>
+<div class="card border-0 shadow-sm" style="max-width:720px"><div class="card-body p-4">
+<form method="POST" action="<%= consumer ? '/admin/consumers/' + consumer._id + '?_method=PUT' : '/admin/consumers' %>">
+  <div class="row g-3">
+    <div class="col-md-6"><label class="form-label">Name</label>
+      <input name="name" class="form-control" value="<%= form.name || '' %>" required></div>
+    <div class="col-md-6"><label class="form-label">Email</label>
+      <input type="email" name="email" class="form-control" value="<%= form.email || '' %>" required></div>
+    <% if (!consumer) { %>
+    <div class="col-md-6"><label class="form-label">Temporary password</label>
+      <input name="password" class="form-control" placeholder="Consumer@123">
+      <div class="form-text">Left blank = Consumer@123 (demo default).</div></div>
+    <% } %>
+    <div class="col-md-6"><label class="form-label">Connection type</label>
+      <select name="connectionType" class="form-select" required>
+        <option value="Domestic" <%= form.connectionType === 'Domestic' ? 'selected' : '' %>>Domestic</option>
+        <option value="Commercial" <%= form.connectionType === 'Commercial' ? 'selected' : '' %>>Commercial</option>
+      </select></div>
+    <div class="col-12"><label class="form-label">Address</label>
+      <input name="address" class="form-control" value="<%= form.address || '' %>"></div>
+    <% if (consumer) { %>
+    <div class="col-12"><div class="form-check">
+      <input class="form-check-input" type="checkbox" name="isActive" id="isActive" <%= consumer.isActive ? 'checked' : '' %>>
+      <label class="form-check-label" for="isActive">Account active</label></div></div>
+    <% } %>
+  </div>
+  <div class="mt-4 d-flex gap-2">
+    <button class="btn btn-primary"><%= consumer ? 'Save changes' : 'Create consumer' %></button>
+    <a href="/admin/consumers" class="btn btn-outline-secondary">Cancel</a>
+  </div>
+</form>
+</div></div>

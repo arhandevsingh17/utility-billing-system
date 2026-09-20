@@ -1,0 +1,49 @@
+<% layout('layouts/dashboard') %>
+<h4 class="mb-1">Consumption history</h4>
+<p class="text-muted small mb-4">Units recorded against your meter, month by month.</p>
+
+<div class="row g-3 mb-4">
+  <div class="col-6 col-lg-3"><div class="card border-0 shadow-sm"><div class="card-body">
+    <div class="text-muted small text-uppercase">Total</div>
+    <div class="fs-4 fw-semibold"><%= summary.total %> kWh</div></div></div></div>
+  <div class="col-6 col-lg-3"><div class="card border-0 shadow-sm"><div class="card-body">
+    <div class="text-muted small text-uppercase">Monthly average</div>
+    <div class="fs-4 fw-semibold"><%= summary.average %> kWh</div></div></div></div>
+  <div class="col-6 col-lg-3"><div class="card border-0 shadow-sm"><div class="card-body">
+    <div class="text-muted small text-uppercase">Highest</div>
+    <div class="fs-4 fw-semibold text-danger"><%= summary.highest %> kWh</div></div></div></div>
+  <div class="col-6 col-lg-3"><div class="card border-0 shadow-sm"><div class="card-body">
+    <div class="text-muted small text-uppercase">Lowest</div>
+    <div class="fs-4 fw-semibold text-success"><%= summary.lowest %> kWh</div></div></div></div>
+</div>
+
+<div class="card border-0 shadow-sm mb-4"><div class="card-body">
+  <h6 class="mb-3">Monthly consumption</h6>
+  <% if (chart.labels.length) { %>
+    <canvas id="consumptionChart" height="120"
+      data-labels='<%- JSON.stringify(chart.labels) %>'
+      data-units='<%- JSON.stringify(chart.units) %>'
+      data-amounts='<%- JSON.stringify(chart.amounts) %>'></canvas>
+  <% } else { %><%- include('../partials/empty', { emptyTitle: 'No readings yet', emptyText: 'Your chart appears after the first meter reading.' }) %><% } %>
+</div></div>
+
+<div class="card border-0 shadow-sm"><div class="card-body p-0">
+<% if (readings.length) { %>
+  <div class="table-responsive"><table class="table align-middle mb-0">
+    <thead><tr><th>Month</th><th>Meter</th><th class="text-end">Previous</th><th class="text-end">Current</th>
+      <th class="text-end">Units</th><th class="text-end">Bill amount</th><th>Status</th></tr></thead>
+    <tbody>
+    <% readings.slice().reverse().forEach(function(r){ var b = billMap[r.billingMonth]; %>
+      <tr>
+        <td class="small"><%= h.formatMonth(r.billingMonth) %></td>
+        <td class="small"><%= r.meter ? r.meter.meterNumber : '-' %></td>
+        <td class="text-end"><%= r.previousReading %></td>
+        <td class="text-end"><%= r.currentReading %></td>
+        <td class="text-end fw-semibold"><%= r.unitsConsumed %> kWh</td>
+        <td class="text-end"><%= b ? h.formatCurrency(b.totalAmount) : '-' %></td>
+        <td><% if (b) { %><%- include('../partials/statusBadge', { status: b.status }) %><% } else { %>-<% } %></td>
+      </tr>
+    <% }) %>
+    </tbody></table></div>
+<% } else { %><%- include('../partials/empty', { emptyTitle: 'No consumption records', emptyText: '' }) %><% } %>
+</div></div>

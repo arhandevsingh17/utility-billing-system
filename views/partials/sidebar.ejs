@@ -1,0 +1,38 @@
+<%
+  var links = [];
+  if (currentUser && currentUser.role === 'admin') {
+    links = [
+      { href: '/admin/dashboard', label: 'Dashboard',   icon: '&#128202;' },
+      { href: '/admin/consumers', label: 'Consumers',   icon: '&#128100;' },
+      { href: '/admin/meters',    label: 'Meters',      icon: '&#9881;'   },
+      { href: '/admin/tariffs',   label: 'Tariffs',     icon: '&#128176;' },
+      { href: '/admin/readers',   label: 'Meter Readers', icon: '&#128203;' },
+      { href: '/admin/bills',     label: 'All Bills',   icon: '&#129534;' },
+      { href: '/reader/readings', label: 'Readings',    icon: '&#128290;' }
+    ];
+  } else if (currentUser && currentUser.role === 'meterReader') {
+    links = [
+      { href: '/reader/dashboard',    label: 'Dashboard',   icon: '&#128202;' },
+      { href: '/reader/readings',     label: 'All Readings',icon: '&#128290;' },
+      { href: '/reader/readings/new', label: 'New Reading', icon: '&#10133;'  }
+    ];
+  } else if (currentUser) {
+    links = [
+      { href: '/consumer/dashboard',   label: 'Dashboard',   icon: '&#128202;' },
+      { href: '/consumer/bill',        label: 'Current Bill',icon: '&#129534;' },
+      { href: '/consumer/bills',       label: 'Bill History',icon: '&#128220;' },
+      { href: '/consumer/consumption', label: 'Consumption', icon: '&#128200;' }
+    ];
+  }
+%>
+<div class="sidebar-inner py-3">
+  <ul class="nav flex-column">
+    <% links.forEach(function(l) { %>
+      <li class="nav-item">
+        <a class="nav-link <%= currentPath === l.href ? 'active' : '' %>" href="<%= l.href %>">
+          <span class="me-2"><%- l.icon %></span><%= l.label %>
+        </a>
+      </li>
+    <% }) %>
+  </ul>
+</div>

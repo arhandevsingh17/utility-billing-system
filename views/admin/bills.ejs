@@ -1,0 +1,43 @@
+<% layout('layouts/dashboard') %>
+<h4 class="mb-1">All bills</h4>
+<p class="text-muted small mb-3"><%= bills.length %> bill(s) shown</p>
+
+<form class="row g-2 mb-3" method="GET" action="/admin/bills">
+  <div class="col-md-3"><select name="status" class="form-select form-select-sm">
+    <option value="">All statuses</option>
+    <% ['Unpaid','Paid','Overdue'].forEach(function(s){ %>
+      <option value="<%= s %>" <%= filters.status === s ? 'selected' : '' %>><%= s %></option>
+    <% }) %></select></div>
+  <div class="col-md-3"><select name="month" class="form-select form-select-sm">
+    <option value="">All months</option>
+    <% months.forEach(function(m){ %>
+      <option value="<%= m %>" <%= filters.month === m ? 'selected' : '' %>><%= h.formatMonth(m) %></option>
+    <% }) %></select></div>
+  <div class="col-md-4"><input name="q" value="<%= filters.q || '' %>" class="form-control form-control-sm" placeholder="Bill number / consumer"></div>
+  <div class="col-md-2 d-flex gap-2">
+    <button class="btn btn-sm btn-outline-secondary w-100">Filter</button>
+    <a href="/admin/bills" class="btn btn-sm btn-link">Reset</a></div>
+</form>
+
+<div class="card border-0 shadow-sm"><div class="card-body p-0">
+<% if (bills.length) { %>
+  <div class="table-responsive"><table class="table align-middle mb-0">
+    <thead><tr><th>Bill no.</th><th>Consumer</th><th>Meter</th><th>Month</th>
+      <th class="text-end">Units</th><th class="text-end">Amount</th><th>Due</th><th>Status</th></tr></thead>
+    <tbody>
+    <% bills.forEach(function(b){ %>
+      <tr>
+        <td><code class="small"><%= b.billNumber %></code></td>
+        <td><div class="small fw-semibold"><%= b.consumer ? b.consumer.name : '-' %></div>
+            <div class="text-muted small"><%= b.consumer ? b.consumer.consumerId : '' %></div></td>
+        <td class="small"><%= b.meter ? b.meter.meterNumber : '-' %></td>
+        <td class="small"><%= h.formatMonth(b.billingMonth) %></td>
+        <td class="text-end"><%= b.unitsConsumed %></td>
+        <td class="text-end fw-semibold"><%= h.formatCurrency(b.totalAmount) %></td>
+        <td class="small"><%= h.formatDate(b.dueDate) %></td>
+        <td><%- include('../partials/statusBadge', { status: b.status }) %></td>
+      </tr>
+    <% }) %>
+    </tbody></table></div>
+<% } else { %><%- include('../partials/empty', { emptyTitle: 'No bills match', emptyText: 'Bills appear automatically when a reader records a reading.' }) %><% } %>
+</div></div>

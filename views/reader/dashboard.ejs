@@ -1,0 +1,38 @@
+<% layout('layouts/dashboard') %>
+<h4 class="mb-1">Meter Reader Dashboard</h4>
+<p class="text-muted small mb-4">Billing month in progress: <strong><%= h.formatMonth(stats.month) %></strong></p>
+
+<div class="row g-3 mb-4">
+  <div class="col-6 col-lg-3"><div class="card border-0 shadow-sm"><div class="card-body">
+    <div class="text-muted small text-uppercase">Active meters</div>
+    <div class="fs-3 fw-semibold"><%= stats.activeMeters %></div></div></div></div>
+  <div class="col-6 col-lg-3"><div class="card border-0 shadow-sm"><div class="card-body">
+    <div class="text-muted small text-uppercase">Read this month</div>
+    <div class="fs-3 fw-semibold text-success"><%= stats.readingsThisMonth %></div></div></div></div>
+  <div class="col-6 col-lg-3"><div class="card border-0 shadow-sm"><div class="card-body">
+    <div class="text-muted small text-uppercase">Still pending</div>
+    <div class="fs-3 fw-semibold text-warning"><%= stats.pending %></div></div></div></div>
+  <div class="col-6 col-lg-3"><div class="card border-0 shadow-sm"><div class="card-body">
+    <div class="text-muted small text-uppercase">Entered by me</div>
+    <div class="fs-3 fw-semibold"><%= stats.myReadings %></div></div></div></div>
+</div>
+
+<a href="/reader/readings/new" class="btn btn-primary mb-4">+ Enter a new reading</a>
+
+<div class="card border-0 shadow-sm"><div class="card-body">
+  <h6 class="mb-3">My recent entries</h6>
+  <% if (recent.length) { %>
+    <table class="table table-sm align-middle mb-0">
+      <thead><tr><th>Meter</th><th>Consumer</th><th>Month</th><th class="text-end">Prev</th><th class="text-end">Curr</th><th class="text-end">Units</th></tr></thead>
+      <tbody>
+      <% recent.forEach(function(r){ %>
+        <tr><td><code class="small"><%= r.meter ? r.meter.meterNumber : '-' %></code></td>
+            <td class="small"><%= r.consumer ? r.consumer.name : '-' %></td>
+            <td class="small"><%= h.formatMonth(r.billingMonth) %></td>
+            <td class="text-end"><%= r.previousReading %></td>
+            <td class="text-end"><%= r.currentReading %></td>
+            <td class="text-end fw-semibold"><%= r.unitsConsumed %> kWh</td></tr>
+      <% }) %>
+      </tbody></table>
+  <% } else { %><%- include('../partials/empty', { emptyTitle: 'No readings entered yet', emptyText: 'Start with the button above.' }) %><% } %>
+</div></div>

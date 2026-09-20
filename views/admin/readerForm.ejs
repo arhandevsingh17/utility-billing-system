@@ -1,0 +1,14 @@
+<% layout('layouts/dashboard') %>
+<h4 class="mb-3">Add meter reader</h4>
+<div class="card border-0 shadow-sm" style="max-width:560px"><div class="card-body p-4">
+<form method="POST" action="/admin/readers">
+  <div class="mb-3"><label class="form-label">Name</label><input name="name" class="form-control" required></div>
+  <div class="mb-3"><label class="form-label">Email</label><input type="email" name="email" class="form-control" required></div>
+  <div class="mb-3"><label class="form-label">Temporary password</label>
+    <input name="password" class="form-control" placeholder="Reader@123">
+    <div class="form-text">Left blank = Reader@123 (demo default).</div></div>
+  <div class="alert alert-secondary small">The role is set to <code>meterReader</code> by the server. It is never taken from the form.</div>
+  <button class="btn btn-primary">Create reader</button>
+  <a href="/admin/readers" class="btn btn-outline-secondary">Cancel</a>
+</form>
+</div></div>

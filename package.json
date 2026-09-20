@@ -1,0 +1,27 @@
+{
+  "name": "utility-billing-system",
+  "version": "1.0.0",
+  "description": "PS 7 - Utility Meter Reading & Billing System (Electricity)",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js",
+    "seed": "node seed.js",
+    "test:billing": "node utils/billCalculator.test.js"
+  },
+  "engines": { "node": ">=18" },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "connect-flash": "^0.1.1",
+    "connect-mongo": "^5.1.0",
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.10",
+    "ejs-mate": "^4.0.0",
+    "express": "^4.19.2",
+    "express-session": "^1.18.0",
+    "method-override": "^3.0.0",
+    "mongoose": "^8.5.1"
+  },
+  "devDependencies": { "nodemon": "^3.1.4" },
+  "license": "ISC"
+}

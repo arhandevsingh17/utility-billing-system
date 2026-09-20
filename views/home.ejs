@@ -1,0 +1,38 @@
+<% layout('layouts/boilerplate') %>
+<section class="hero-section text-white py-5">
+  <div class="container py-4">
+    <span class="badge bg-light text-dark mb-3">PS 7 &middot; Utilities / Public Services</span>
+    <h1 class="display-5 fw-bold">Utility Meter Reading &amp; Billing System</h1>
+    <p class="lead mb-4 opacity-75" style="max-width:640px">
+      Record monthly electricity meter readings, generate slab-wise bills automatically,
+      and let consumers track their consumption in kWh.
+    </p>
+    <a href="/login" class="btn btn-light btn-lg px-4">Login</a>
+    <a href="/register" class="btn btn-outline-light btn-lg px-4 ms-2">Register as Consumer</a>
+  </div>
+</section>
+
+<div class="container my-5">
+  <div class="row g-4">
+    <div class="col-md-4"><div class="card h-100 shadow-sm border-0"><div class="card-body">
+      <div class="fs-2">&#128736;</div><h5 class="mt-2">Admin</h5>
+      <p class="text-muted small mb-0">Manage consumers, meters, meter readers and tariff slabs. Monitor billing statistics from a live dashboard.</p>
+    </div></div></div>
+    <div class="col-md-4"><div class="card h-100 shadow-sm border-0"><div class="card-body">
+      <div class="fs-2">&#128203;</div><h5 class="mt-2">Meter Reader</h5>
+      <p class="text-muted small mb-0">Enter the monthly reading for each active meter. Readings lower than the previous month are rejected and bills are generated automatically.</p>
+    </div></div></div>
+    <div class="col-md-4"><div class="card h-100 shadow-sm border-0"><div class="card-body">
+      <div class="fs-2">&#127968;</div><h5 class="mt-2">Consumer</h5>
+      <p class="text-muted small mb-0">View the current bill, mark it paid, browse past bills and follow monthly consumption history.</p>
+    </div></div></div>
+  </div>
+
+  <div class="card border-0 shadow-sm mt-4"><div class="card-body">
+    <h6 class="text-uppercase text-muted small">How a bill is produced</h6>
+    <p class="mb-0 small">
+      Meter &rarr; previous reading &rarr; current reading &rarr; validation &rarr;
+      units consumed &rarr; tariff slabs &rarr; energy charge + fixed charge &rarr; bill &rarr; payment status
+    </p>
+  </div></div>
+</div>

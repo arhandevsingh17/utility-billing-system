@@ -1,0 +1,34 @@
+<% layout('layouts/dashboard') %>
+<div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+  <div><h4 class="mb-0">Consumers</h4><p class="text-muted small mb-0"><%= consumers.length %> record(s)</p></div>
+  <div class="d-flex gap-2">
+    <form class="d-flex gap-2" method="GET" action="/admin/consumers">
+      <input name="q" value="<%= q %>" class="form-control form-control-sm" placeholder="Search name / ID / email">
+      <button class="btn btn-sm btn-outline-secondary">Search</button>
+    </form>
+    <a href="/admin/consumers/new" class="btn btn-sm btn-primary">+ Add consumer</a>
+  </div>
+</div>
+
+<div class="card border-0 shadow-sm"><div class="card-body p-0">
+<% if (consumers.length) { %>
+  <div class="table-responsive"><table class="table align-middle mb-0">
+    <thead><tr><th>Consumer ID</th><th>Name</th><th>Email</th><th>Type</th><th>Meters</th><th>Status</th><th></th></tr></thead>
+    <tbody>
+    <% consumers.forEach(function(c){ %>
+      <tr>
+        <td><code><%= c.consumerId || '-' %></code></td>
+        <td><div class="fw-semibold"><%= c.name %></div><div class="text-muted small"><%= c.address || '' %></div></td>
+        <td class="small"><%= c.email %></td>
+        <td><span class="badge bg-light text-dark"><%= c.connectionType || '-' %></span></td>
+        <td><%= meterMap[String(c._id)] || 0 %></td>
+        <td><span class="badge bg-<%= c.isActive ? 'success' : 'secondary' %>"><%= c.isActive ? 'Active' : 'Inactive' %></span></td>
+        <td class="text-end"><a href="/admin/consumers/<%= c._id %>/edit" class="btn btn-sm btn-outline-secondary">Edit</a></td>
+      </tr>
+    <% }) %>
+    </tbody>
+  </table></div>
+<% } else { %>
+  <%- include('../partials/empty', { emptyTitle: 'No consumers found', emptyText: 'Add one, or run npm run seed for demo data.' }) %>
+<% } %>
+</div></div>
